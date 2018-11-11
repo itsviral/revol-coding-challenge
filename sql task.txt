@@ -1,0 +1,11 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1671
+{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww10800\viewh8400\viewkind0
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 select t.user_id, SUM(t.amount * R.final_rate) as spend_in_gbp  from transactions t left join \
+        (select rate as final_rate, Max(ToT), user_id, mid.currency, TOL from (select er.ts as ToT, tt.ts as TOL, tt.*, er.rate, er.from_currency, er.to_currency from transactions tt join exchange_rates er on (tt.currency = er.from_currency and er.to_currency = 'GBP') OR tt.currency ='GBP'  where tt.ts = er.ts or tt.ts > er.ts) as mid group by from_currency, to_currency, user_id, amount order by currency ASC, TOL ASC) as R\
+    on t.user_id = R.user_id and t.currency = R.currency and t.ts = R.TOL group by t.user_id Order by t.user_id ASC\
+}
